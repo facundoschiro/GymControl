@@ -1,0 +1,8 @@
+.root { -fx-font-family: "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial; }
+.sidebar { -fx-background-color: #111827; }
+.sidebar .label.brand { -fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold; }
+.sidebar .button { -fx-background-color: transparent; -fx-text-fill: #e5e7eb; }
+.sidebar .button:hover { -fx-background-color: #1f2937; }
+.screen { -fx-padding: 20; }
+.h1 { -fx-font-size: 22px; -fx-font-weight: bold; }
+.status { -fx-font-size: 16px; -fx-font-weight: bold; }

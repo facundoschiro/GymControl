@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ar.edu.gymcontrol.controller.SociosController">
+    <top>
+        <HBox spacing="12" styleClass="screen">
+            <children>
+                <Label text="Socios" styleClass="h1"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="buscarField" promptText="Buscar por DNI o Apellido..."/>
+                <Button text="Buscar" onAction="#buscar"/>
+                <Button text="Limpiar" onAction="#limpiarBusqueda"/>
+            </children>
+            <padding><Insets top="8" right="10" bottom="8" left="10"/></padding>
+        </HBox>
+    </top>
+
+    <center>
+        <TableView fx:id="tabla" prefHeight="420">
+            <columns>
+                <TableColumn fx:id="colDni" text="DNI" prefWidth="120"/>
+                <TableColumn fx:id="colApe" text="Apellido" prefWidth="140"/>
+                <TableColumn fx:id="colNom" text="Nombre" prefWidth="140"/>
+                <TableColumn fx:id="colEstado" text="Estado" prefWidth="100"/>
+                <TableColumn fx:id="colApto" text="Apto hasta" prefWidth="120"/>
+                <TableColumn fx:id="colCuota" text="Cuota hasta" prefWidth="120"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <bottom>
+        <TitledPane text="Formulario" expanded="true">
+            <content>
+                <GridPane hgap="10" vgap="10">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="15"/>
+                        <ColumnConstraints percentWidth="35"/>
+                        <ColumnConstraints percentWidth="15"/>
+                        <ColumnConstraints percentWidth="35"/>
+                    </columnConstraints>
+
+                    <children>
+                        <Label text="DNI:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                        <TextField fx:id="dniField" promptText="7-8 dígitos"
+                                   GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                        <Label text="Apellido:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                        <TextField fx:id="apeField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                        <Label text="Nombre:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                        <TextField fx:id="nomField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                        <Label text="Estado:" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+                        <ComboBox fx:id="estadoCombo" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+
+                        <Label text="Apto hasta:" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+                        <DatePicker fx:id="aptoPicker" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+
+                        <Label text="Cuota hasta:" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+                        <DatePicker fx:id="cuotaPicker" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
+
+                        <HBox spacing="8" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="4">
+                            <children>
+                                <Button text="Nuevo" onAction="#nuevo"/>
+                                <Button text="Guardar" onAction="#guardar"/>
+                                <Button text="Eliminar" onAction="#eliminar"/>
+                            </children>
+                        </HBox>
+                    </children>
+                </GridPane>
+            </content>
+        </TitledPane>
+    </bottom>
+</BorderPane>

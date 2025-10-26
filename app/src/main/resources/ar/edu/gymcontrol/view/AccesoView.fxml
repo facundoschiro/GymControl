@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ar.edu.gymcontrol.controller.AccesoController" spacing="12" styleClass="screen">
+    <children>
+        <Label text="Control de Acceso" styleClass="h1"/>
+        <HBox spacing="8">
+            <children>
+                <TextField fx:id="dniField" promptText="DNI"/>
+                <Button text="Validar acceso" onAction="#validarAcceso"/>
+            </children>
+        </HBox>
+        <Label fx:id="resultadoLabel" text="Esperando DNI..." styleClass="status"/>
+        <TitledPane text="Últimos accesos (demo)">
+            <content>
+                <ListView fx:id="ultimosList"/>
+            </content>
+        </TitledPane>
+    </children>
+</VBox>

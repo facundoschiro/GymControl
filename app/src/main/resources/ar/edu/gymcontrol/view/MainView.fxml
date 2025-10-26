@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane fx:controller="ar.edu.gymcontrol.controller.MainController"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <left>
+        <VBox spacing="10" styleClass="sidebar" prefWidth="230">
+            <children>
+                <Label text="GymControl+" styleClass="brand"/>
+                <Button text="Acceso"    onAction="#goAcceso"    maxWidth="1.7976931348623157E308"/>
+                <Button text="Socios"    onAction="#goSocios"    maxWidth="1.7976931348623157E308"/>
+                <Button text="Entrenos"  onAction="#goEntrenos"  maxWidth="1.7976931348623157E308"/>
+                <Button text="Ejercicios" onAction="#goEjercicios" maxWidth="1.7976931348623157E308"/>
+                <Button text="Reportes"  onAction="#goReportes"  maxWidth="1.7976931348623157E308"/>
+                <Separator/>
+                <Button text="Salir"     onAction="#exitApp"     maxWidth="1.7976931348623157E308"/>
+            </children>
+            <padding><Insets topRightBottomLeft="16"/></padding>
+        </VBox>
+    </left>
+    <center>
+        <StackPane fx:id="contentPane"/>
+    </center>
+</BorderPane>

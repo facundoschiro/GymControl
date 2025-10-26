@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ar.edu.gymcontrol.controller.EntrenosController"
+      spacing="12" styleClass="screen">
+
+    <children>
+        <Label text="Sesión de Entrenamiento" styleClass="h1"/>
+
+        <HBox spacing="8">
+            <children>
+                <TextField fx:id="dniField" promptText="DNI socio" />
+                <DatePicker fx:id="fechaPicker" />
+                <Button text="Abrir/Crear sesión" onAction="#abrirSesion"/>
+                <Label fx:id="sesionInfo" />
+            </children>
+        </HBox>
+
+        <TitledPane text="Agregar serie" expanded="true">
+            <content>
+                <HBox spacing="8">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                    <children>
+                        <ComboBox fx:id="ejercicioCombo" prefWidth="220"/>
+                        <TextField fx:id="repsField" promptText="Reps"/>
+                        <TextField fx:id="pesoField" promptText="Peso (kg)"/>
+                        <Button text="Agregar" onAction="#agregarSerie"/>
+                        <Button text="Deshacer" onAction="#deshacer"/>
+                    </children>
+                </HBox>
+            </content>
+        </TitledPane>
+
+        <TableView fx:id="tablaSeries" prefHeight="360">
+            <columns>
+                <TableColumn fx:id="colNro" text="Serie" prefWidth="70"/>
+                <TableColumn fx:id="colEjercicio" text="Ejercicio" prefWidth="220"/>
+                <TableColumn fx:id="colReps" text="Reps" prefWidth="90"/>
+                <TableColumn fx:id="colPeso" text="Peso (kg)" prefWidth="90"/>
+                <TableColumn fx:id="colVol" text="Volumen" prefWidth="100"/>
+            </columns>
+        </TableView>
+
+        <HBox spacing="16">
+            <children>
+                <Label fx:id="volumenLabel" text="Volumen total: 0 kg"/>
+                <Label fx:id="ultimaMarcaLabel" text="Última marca: -"/>
+            </children>
+        </HBox>
+    </children>
+
+    <padding><Insets top="0" right="10" bottom="10" left="0"/></padding>
+</VBox>
