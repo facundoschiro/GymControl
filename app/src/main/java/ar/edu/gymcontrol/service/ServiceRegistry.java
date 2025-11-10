@@ -6,6 +6,9 @@ import ar.edu.gymcontrol.model.GrupoMuscular;
 import ar.edu.gymcontrol.repository.EjercicioRepo;
 import ar.edu.gymcontrol.repository.SesionRepo;
 import ar.edu.gymcontrol.repository.SocioRepo;
+import ar.edu.gymcontrol.service.validador.*;
+import java.util.List;
+
 
 public class ServiceRegistry {
     private static ServiceRegistry INSTANCE;
@@ -33,7 +36,10 @@ public class ServiceRegistry {
         ejercicioRepo.save(new Ejercicio("Plancha",       GrupoMuscular.CORE));
 
         // Servicios
-        servicioAcceso = new ServicioAcceso(socioRepo);
+        servicioAcceso = new ServicioAcceso(
+                socioRepo,
+                List.of(new ValidadorEstado(), new ValidadorApto(), new ValidadorCuota())
+        );
         servicioEntrenamiento = new ServicioEntrenamiento(sesionRepo, ejercicioRepo);
         servicioReportes = new ServicioReportes(socioRepo);
     }

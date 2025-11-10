@@ -8,7 +8,7 @@ public class SocioRepo {
 
     public Optional<Socio> findByDni(String dni) { return Optional.ofNullable(data.get(dni)); }
     public void save(Socio s) { data.put(s.getDni(), s); }
-    public Collection<Socio> findAll() { return data.values(); }
+    public List<Socio> findAll() { return new ArrayList<>(data.values()); }
     public void deleteByDni(String dni) { data.remove(dni); }
 
 

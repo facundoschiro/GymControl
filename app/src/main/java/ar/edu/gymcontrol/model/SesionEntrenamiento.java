@@ -16,7 +16,9 @@ public class SesionEntrenamiento {
     public String getId() { return id; }
     public String getSocioDni() { return socioDni; }
     public LocalDate getFecha() { return fecha; }
-    public List<Serie> getSeries() { return Collections.unmodifiableList(series); }
+    public List<Serie> getSeries() {
+        return java.util.Collections.unmodifiableList(series);
+    }
 
     public void addSerie(Serie s) { series.add(s); }
     public Serie removeLastSerie() { return series.isEmpty()? null : series.remove(series.size()-1); }
