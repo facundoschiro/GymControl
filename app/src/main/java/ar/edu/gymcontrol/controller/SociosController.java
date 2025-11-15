@@ -2,7 +2,7 @@ package ar.edu.gymcontrol.controller;
 
 import ar.edu.gymcontrol.model.EstadoSocio;
 import ar.edu.gymcontrol.model.Socio;
-import ar.edu.gymcontrol.repository.SocioRepo;
+import ar.edu.gymcontrol.repository.SocioRepository;
 import ar.edu.gymcontrol.service.ServiceRegistry;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
@@ -19,12 +19,11 @@ public class SociosController {
     @FXML private TableColumn<Socio,String> colDni, colApe, colNom, colEstado, colApto, colCuota;
 
     @FXML private TextField buscarField;
-
     @FXML private TextField dniField, apeField, nomField;
     @FXML private ComboBox<EstadoSocio> estadoCombo;
     @FXML private DatePicker aptoPicker, cuotaPicker;
 
-    private final SocioRepo repo = ServiceRegistry.get().socioRepo;
+    private final SocioRepository repo = ServiceRegistry.get().socioRepo;
 
     @FXML
     public void initialize() {
@@ -36,14 +35,15 @@ public class SociosController {
         colCuota.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(String.valueOf(c.getValue().getCuotaHasta())));
 
         estadoCombo.getItems().setAll(EstadoSocio.values());
-        cargarTabla(repo.findAll().stream().collect(Collectors.toList()));
+        recargar();
 
         tabla.getSelectionModel().selectedItemProperty().addListener((obs, old, s) -> {
             if (s != null) cargarFormulario(s);
         });
     }
 
-    private void cargarTabla(List<Socio> data) {
+    private void recargar() {
+        var data = repo.findAll().stream().collect(Collectors.toList());
         data.sort(Comparator.comparing(Socio::getApellido).thenComparing(Socio::getNombre));
         tabla.getItems().setAll(data);
     }
@@ -55,7 +55,7 @@ public class SociosController {
         estadoCombo.setValue(s.getEstado());
         aptoPicker.setValue(s.getAptoHasta());
         cuotaPicker.setValue(s.getCuotaHasta());
-        dniField.setDisable(true); // clave no editable
+        dniField.setDisable(true); // DNI es clave
     }
 
     @FXML
@@ -79,9 +79,9 @@ public class SociosController {
             LocalDate apto = aptoPicker.getValue() == null ? LocalDate.now().plusMonths(6) : aptoPicker.getValue();
             LocalDate cuota = cuotaPicker.getValue() == null ? LocalDate.now().plusDays(30) : cuotaPicker.getValue();
 
-            Socio existente = repo.findByDni(dni).orElse(null);
+            var existente = repo.findByDni(dni).orElse(null);
             if (existente == null) {
-                Socio s = new Socio(dni, nom, ape, apto, cuota);
+                var s = new Socio(dni, nom, ape, apto, cuota);
                 s.setEstado(est);
                 repo.save(s);
             } else {
@@ -103,17 +103,15 @@ public class SociosController {
 
     @FXML
     private void eliminar() {
-        Socio sel = tabla.getSelectionModel().getSelectedItem();
-        if (sel == null) {
-            new Alert(Alert.AlertType.WARNING, "Seleccioná un socio").showAndWait();
-            return;
-        }
-        Alert conf = new Alert(Alert.AlertType.CONFIRMATION,
+        var sel = tabla.getSelectionModel().getSelectedItem();
+        if (sel == null) { new Alert(Alert.AlertType.WARNING, "Seleccioná un socio").showAndWait(); return; }
+
+        var conf = new Alert(Alert.AlertType.CONFIRMATION,
                 "¿Eliminar al socio " + sel + "?", ButtonType.OK, ButtonType.CANCEL);
         conf.setHeaderText("Confirmar eliminación");
         conf.showAndWait().ifPresent(bt -> {
             if (bt == ButtonType.OK) {
-                repo.deleteByDni(sel.getDni());   // <-- delete real
+                repo.deleteByDni(sel.getDni());
                 recargar();
                 limpiarFormulario();
                 new Alert(Alert.AlertType.INFORMATION, "Eliminado.").showAndWait();
@@ -127,7 +125,8 @@ public class SociosController {
         var filtrados = repo.findAll().stream()
                 .filter(s -> s.getDni().contains(q) || s.getApellido().toLowerCase().contains(q))
                 .collect(Collectors.toList());
-        cargarTabla(filtrados);
+        filtrados.sort(Comparator.comparing(Socio::getApellido).thenComparing(Socio::getNombre));
+        tabla.getItems().setAll(filtrados);
     }
 
     @FXML
@@ -136,9 +135,6 @@ public class SociosController {
         recargar();
     }
 
-    private void recargar() {
-        cargarTabla(repo.findAll().stream().collect(Collectors.toList()));
-    }
     private void limpiarFormulario() {
         tabla.getSelectionModel().clearSelection();
         dniField.clear(); apeField.clear(); nomField.clear();

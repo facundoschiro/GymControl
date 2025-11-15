@@ -2,16 +2,17 @@ package ar.edu.gymcontrol.service;
 
 import ar.edu.gymcontrol.exceptions.SocioNoEncontradoException;
 import ar.edu.gymcontrol.model.Socio;
-import ar.edu.gymcontrol.repository.SocioRepo;
+import ar.edu.gymcontrol.repository.SocioRepoInMemory;
+import ar.edu.gymcontrol.repository.SocioRepository;
 import ar.edu.gymcontrol.service.validador.ValidadorSocio;
 
 import java.util.List;
 
 public class ServicioAcceso {
-    private final SocioRepo socios;
-    private final List<ValidadorSocio> validadores;
+    private final SocioRepository socios;
+    private final java.util.List<ValidadorSocio> validadores;
 
-    public ServicioAcceso(SocioRepo socios, List<ValidadorSocio> validadores) {
+    public ServicioAcceso(SocioRepository socios, java.util.List<ValidadorSocio> validadores) {
         this.socios = socios;
         this.validadores = validadores;
     }

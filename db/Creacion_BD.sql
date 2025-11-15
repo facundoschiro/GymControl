@@ -5,8 +5,10 @@ CREATE TABLE socio (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   dni VARCHAR(15) NOT NULL,
   nombre VARCHAR(120) NOT NULL,
+  apellido VARCHAR(120) NOT NULL,
   estado ENUM('ACTIVO','INACTIVO') NOT NULL DEFAULT 'ACTIVO',
   fecha_alta DATE NOT NULL,
+  cuota_hasta DATE NOT NULL,
   apto_medico_hasta DATE NULL,
   UNIQUE KEY uq_socio_dni (dni)
 );

@@ -3,16 +3,15 @@ package ar.edu.gymcontrol.service;
 import ar.edu.gymcontrol.algorithms.BinarySearch;
 import ar.edu.gymcontrol.algorithms.InsertionSort;
 import ar.edu.gymcontrol.model.Socio;
-import ar.edu.gymcontrol.repository.SocioRepo;
+import ar.edu.gymcontrol.repository.SocioRepository;
 
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ServicioReportes {
-
-    private final SocioRepo socios;
-    public ServicioReportes(SocioRepo socios) { this.socios = socios; }
+    private final SocioRepository socios;
+    public ServicioReportes(SocioRepository socios) { this.socios = socios; }
 
     public List<Socio> morososOrdenados() {
         List<Socio> morosos = socios.findAll().stream()

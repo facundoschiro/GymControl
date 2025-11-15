@@ -89,7 +89,7 @@ public class EjerciciosController {
         conf.setHeaderText("Confirmar eliminación");
         conf.showAndWait().ifPresent(bt -> {
             if (bt == ButtonType.OK) {
-                repo.deleteById(seleccionado.getId());
+                repo.deleteById(seleccionado.getId());  // asegúrate de tener este método en el repo
                 seleccionado = null;
                 cargarTabla(repo.findAll());
                 nombreField.clear();

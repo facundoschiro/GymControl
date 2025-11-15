@@ -1,47 +1,46 @@
 package ar.edu.gymcontrol.service;
 
-import ar.edu.gymcontrol.bootstrap.BootstrapData;
-import ar.edu.gymcontrol.model.Ejercicio;
-import ar.edu.gymcontrol.model.GrupoMuscular;
-import ar.edu.gymcontrol.repository.EjercicioRepo;
-import ar.edu.gymcontrol.repository.SesionRepo;
-import ar.edu.gymcontrol.repository.SocioRepo;
-import ar.edu.gymcontrol.service.validador.*;
-import java.util.List;
-
+import ar.edu.gymcontrol.repository.SocioRepoInMemory;
+import ar.edu.gymcontrol.repository.SocioRepoJdbc;
+import ar.edu.gymcontrol.repository.SocioRepository;
 
 public class ServiceRegistry {
     private static ServiceRegistry INSTANCE;
 
-    public final SocioRepo socioRepo;
-    public final EjercicioRepo ejercicioRepo;
-    public final SesionRepo sesionRepo;
-    public final ServicioReportes servicioReportes;
+    public enum Persistence { IN_MEMORY, JDBC }
+
+    // --- Repos como interfaces
+    public final SocioRepository socioRepo;
+    public final ar.edu.gymcontrol.repository.EjercicioRepo ejercicioRepo;
+    public final ar.edu.gymcontrol.repository.SesionRepo    sesionRepo;
 
     public final ServicioAcceso servicioAcceso;
     public final ServicioEntrenamiento servicioEntrenamiento;
+    public final ServicioReportes servicioReportes;
 
     private ServiceRegistry() {
-        socioRepo = new SocioRepo();
-        ejercicioRepo = new EjercicioRepo();
-        sesionRepo = new SesionRepo();
+        var mode = Persistence.JDBC; // cambiá cuando quieras
 
-        // Datos de prueba
-        BootstrapData.load(socioRepo);
-        ejercicioRepo.save(new Ejercicio("Press banca",   GrupoMuscular.PECHO));
-        ejercicioRepo.save(new Ejercicio("Dominadas",     GrupoMuscular.ESPALDA));
-        ejercicioRepo.save(new Ejercicio("Sentadilla",    GrupoMuscular.PIERNAS));
-        ejercicioRepo.save(new Ejercicio("Press militar", GrupoMuscular.HOMBROS));
-        ejercicioRepo.save(new Ejercicio("Curl bíceps",   GrupoMuscular.BRAZOS));
-        ejercicioRepo.save(new Ejercicio("Plancha",       GrupoMuscular.CORE));
+        if (mode == Persistence.JDBC) {
+            socioRepo   = new SocioRepoJdbc();
+            ejercicioRepo = new ar.edu.gymcontrol.repository.EjercicioRepo(); // in-memory por ahora
+            sesionRepo    = new ar.edu.gymcontrol.repository.SesionRepo();    // in-memory por ahora
+        } else {
+            socioRepo   = new SocioRepoInMemory();
+            ejercicioRepo = new ar.edu.gymcontrol.repository.EjercicioRepo();
+            sesionRepo    = new ar.edu.gymcontrol.repository.SesionRepo();
+            ar.edu.gymcontrol.bootstrap.BootstrapData.load(socioRepo); // acepta la interfaz
+        }
 
-        // Servicios
-        servicioAcceso = new ServicioAcceso(
-                socioRepo,
-                List.of(new ValidadorEstado(), new ValidadorApto(), new ValidadorCuota())
+        var validators = java.util.List.of(
+                new ar.edu.gymcontrol.service.validador.ValidadorEstado(),
+                new ar.edu.gymcontrol.service.validador.ValidadorApto(),
+                new ar.edu.gymcontrol.service.validador.ValidadorCuota()
         );
+
+        servicioAcceso        = new ServicioAcceso(socioRepo, validators); // usa la interfaz
         servicioEntrenamiento = new ServicioEntrenamiento(sesionRepo, ejercicioRepo);
-        servicioReportes = new ServicioReportes(socioRepo);
+        servicioReportes      = new ServicioReportes(socioRepo);
     }
 
     public static ServiceRegistry get() {

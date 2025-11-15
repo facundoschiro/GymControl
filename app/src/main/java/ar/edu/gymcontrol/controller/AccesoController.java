@@ -1,14 +1,12 @@
 package ar.edu.gymcontrol.controller;
 
 import ar.edu.gymcontrol.service.ServiceRegistry;
-import ar.edu.gymcontrol.service.ValidacionAcceso;
+import ar.edu.gymcontrol.util.RingBuffer;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayDeque;
-import java.util.Deque;
 
 public class AccesoController {
 
@@ -16,12 +14,11 @@ public class AccesoController {
     @FXML private Label resultadoLabel;
     @FXML private ListView<String> ultimosList;
 
-    private final Deque<String> ultimos = new ArrayDeque<>(10);
+    // Buffer circular: ya expulsa el más viejo cuando se llena (no hay removeFirst)
+    private final RingBuffer<String> ultimos = new RingBuffer<>(10);
 
     @FXML
-    public void initialize() {
-        resultadoLabel.setText("Esperando DNI...");
-    }
+    public void initialize() { resultadoLabel.setText("Esperando DNI..."); }
 
     @FXML
     private void validarAcceso() {
@@ -29,15 +26,19 @@ public class AccesoController {
         try {
             if (!dni.matches("\\d{7,8}")) throw new IllegalArgumentException("DNI inválido (7 u 8 dígitos).");
 
-            ValidacionAcceso res = ServiceRegistry.get().servicioAcceso.validarPorDni(dni);
+            var res = ServiceRegistry.get().servicioAcceso.validarPorDni(dni);
+
             String ts = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM HH:mm"));
-            String item = ts + " • DNI " + dni + " → " + (res.permitido() ? "PERMITIDO" : "DENEGADO") + " (" + res.mensaje() + ")";
+            String item = ts + " • DNI " + dni + " • " + (res.permitido() ? "PERMITIDO" : "DENEGADO")
+                    + " (" + res.mensaje() + ")";
 
-            if (ultimos.size() == 10) ultimos.removeFirst();
-            ultimos.addLast(item);
-            ultimosList.getItems().setAll(ultimos);
+            ultimos.add(item);
+            ultimosList.getItems().setAll(ultimos.toList());
 
-            resultadoLabel.setText(res.permitido() ? "✅ Acceso PERMITIDO" : "⛔ " + res.mensaje());
+            resultadoLabel.setText(res.permitido()
+                    ? "Acceso permitido"
+                    : "Acceso denegado: " + res.mensaje());
+
         } catch (Exception ex) {
             new Alert(Alert.AlertType.WARNING, ex.getMessage()).showAndWait();
         } finally {
